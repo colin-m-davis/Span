@@ -1,5 +1,5 @@
-// #ifndef LINALG
-// #define LINALG
+#ifndef LINALG
+#define LINALG
 
 // Dependencies
 #include <stdlib.h>
@@ -10,20 +10,23 @@
 // n-dimensional vector
 template<typename T>
 struct tensor {
-
     int _size = 1;
     int n;
-    std::vector<int> dims;
+    std::vector<int> shape;
     std::vector<int> _strides;
     std::vector<T> _data;
 
-    tensor(std::vector<int> d) {
-        dims = d;
-        n = dims.size();
+    tensor(std::vector<int> s) {
+        set_shape(s);
+    }
+
+    void set_shape(std::vector<int> s) {
+        shape = s;
+        n = shape.size();
         _strides.resize(n);
         for (int i=n-1; i>=0; i--) {
-            _size *= dims[i];
-            _strides[i] = (i == n-1) ? (1) : (dims[i+1] * _strides[i+1]);
+            _size *= shape[i];
+            _strides[i] = (i == n-1) ? (1) : (shape[i+1] * _strides[i+1]);
         }
         _data.reserve(_size);
     }
@@ -68,7 +71,7 @@ struct tensor {
 
     // Add each of this element to that element and return new tensor
     tensor<T> operator+ (tensor<T> const& that) {
-        tensor<T> result(dims);
+        tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]+that._data[i]);
         }
@@ -77,7 +80,7 @@ struct tensor {
 
     // Increment each entry by a scalar
     tensor<T>* operator+ (float addend) {
-        tensor<T> result(dims);
+        tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]+addend);
         }
@@ -86,7 +89,7 @@ struct tensor {
 
     // Subtract each of this element from that element and return new tensor
     tensor<T> operator- (tensor<T> const& that) {
-        tensor<T> result(dims);
+        tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]-that._data[i]);
         }
@@ -95,7 +98,7 @@ struct tensor {
 
     // Decrement each entry by a scalar
     tensor<T>* operator- (float subtrahend) {
-        tensor<T> result(dims);
+        tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]-subtrahend);
         }
@@ -104,7 +107,7 @@ struct tensor {
 
     // Multiply each entry by a scalar
     tensor<T>* operator* (float multiplier) {
-        tensor<T> result(dims);
+        tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]*multiplier);
         }
@@ -112,10 +115,24 @@ struct tensor {
     }
 
     bool operator== (tensor<T> const& that) {
-        return ((dims = that.dims) & (_data = that.data));
+        return ((shape = that.shape) & (_data = that.data));
     }
 };
 
+template<typename T>
+struct matrix : public tensor<T> {
 
+    matrix(int m, int n) : tensor<T>({m, n}) {}
 
-// #endif /* LINALG */
+    void load(const std::vector<std::vector<T> >& vec) {
+        this->_data.clear();
+        this->_data.reserve(vec.size() * vec[0].size());
+        for (const std::vector<T>& v : vec) {
+            this->_data.insert(this->_data.end(), v.begin(), v.end());
+        }
+    }
+};
+
+// TODO - matrix subclass, flatten 2d container into matrix object, matrix product, tensor product, various other operations, to_string...So much more
+
+#endif /* LINALG */

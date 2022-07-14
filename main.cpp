@@ -1,10 +1,12 @@
 /* For testing purposes */
 
-#include "linalg.cpp"
+#include "linalg.h"
 #include <iostream>
 
 int main() {
     tensor<int> x = tensor<int>({3, 4, 5, 6});
     std::vector<int> z = x._indices_from_index(200);
-    return 0;
+    matrix<int> a({2, 3});
+    a.load({{3, 3, 3},{2,1,4}});
+    std::vector<int> j = a.shape;
 }
