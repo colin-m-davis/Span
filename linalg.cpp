@@ -57,15 +57,16 @@ struct tensor {
         return _data[index_of_element];
     }
 
-    void _set_element(const std::vector<int>& indices) {
+    void _set_element(const std::vector<int>& indices, T element) {
         int index_of_element = _index_from_indices(indices);
-        return _data[index_of_element];
+        _data[index_of_element] = element;
     }
 
     void _set_element(int index_of_element, T element) {
         _data[index_of_element] = element;
     }
 
+    // Add each of this element to that element and return new tensor
     tensor<T> operator+ (tensor<T> const& that) {
         tensor<T> result(dims);
         for (int i=0; i<_size; i++) {
@@ -74,6 +75,7 @@ struct tensor {
         return result;
     }
 
+    // Increment each entry by a scalar
     tensor<T>* operator+ (float addend) {
         tensor<T> result(dims);
         for (int i=0; i<_size; i++) {
@@ -82,6 +84,7 @@ struct tensor {
         return this;
     }
 
+    // Subtract each of this element from that element and return new tensor
     tensor<T> operator- (tensor<T> const& that) {
         tensor<T> result(dims);
         for (int i=0; i<_size; i++) {
@@ -90,7 +93,8 @@ struct tensor {
         return result;
     }
 
-    tensor<T>* operator+ (float subtrahend) {
+    // Decrement each entry by a scalar
+    tensor<T>* operator- (float subtrahend) {
         tensor<T> result(dims);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]-subtrahend);
@@ -98,10 +102,10 @@ struct tensor {
         return this;
     }
 
-
+    // Multiply each entry by a scalar
     tensor<T>* operator* (float multiplier) {
         tensor<T> result(dims);
-        for (int i=0; i<size; i++) {
+        for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]*multiplier);
         }
         return this;
