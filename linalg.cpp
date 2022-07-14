@@ -110,6 +110,10 @@ struct tensor {
         }
         return this;
     }
+
+    bool operator== (tensor<T> const& that) {
+        return ((dims = that.dims) & (_data = that.data));
+    }
 };
 
 
