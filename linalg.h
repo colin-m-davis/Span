@@ -16,11 +16,12 @@ struct tensor {
     std::vector<int> _strides;
     std::vector<T> _data;
 
-    tensor(std::vector<int> s) {
-        set_shape(s);
+    tensor(std::vector<int> s, std::vector<T> d) {
+        _set_shape(s);
+        _data = d;
     }
 
-    void set_shape(std::vector<int> s) {
+    void _set_shape(std::vector<int> s) {
         shape = s;
         n = shape.size();
         _strides.resize(n);
@@ -79,12 +80,12 @@ struct tensor {
     }
 
     // Increment each entry by a scalar
-    tensor<T>* operator+ (float addend) {
+    tensor<T> operator+ (float addend) {
         tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]+addend);
         }
-        return this;
+        return *this;
     }
 
     // Subtract each of this element from that element and return new tensor
@@ -97,21 +98,21 @@ struct tensor {
     }
 
     // Decrement each entry by a scalar
-    tensor<T>* operator- (float subtrahend) {
+    tensor<T> operator- (float subtrahend) {
         tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]-subtrahend);
         }
-        return this;
+        return *this;
     }
 
     // Multiply each entry by a scalar
-    tensor<T>* operator* (float multiplier) {
+    tensor<T> operator* (float multiplier) {
         tensor<T> result(shape);
         for (int i=0; i<_size; i++) {
             result._set_element(i, _data[i]*multiplier);
         }
-        return this;
+        return *this;
     }
 
     bool operator== (tensor<T> const& that) {
@@ -121,18 +122,11 @@ struct tensor {
 
 template<typename T>
 struct matrix : public tensor<T> {
-
-    matrix(int m, int n) : tensor<T>({m, n}) {}
-
-    void load(const std::vector<std::vector<T> >& vec) {
-        this->_data.clear();
-        this->_data.reserve(vec.size() * vec[0].size());
-        for (const std::vector<T>& v : vec) {
-            this->_data.insert(this->_data.end(), v.begin(), v.end());
-        }
-    }
+    matrix(int m, int n, std::vector<T> d) : tensor<T>({m, n}, d) {}
 };
 
-// TODO - matrix subclass, flatten 2d container into matrix object, matrix product, tensor product, various other operations, to_string...So much more
+
+
+// TODO - matrix subclass, matrix product, tensor product, various other operations, to_string...So much more
 
 #endif /* LINALG */
