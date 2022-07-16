@@ -1,11 +1,46 @@
 /* For testing purposes */
 
-#include "linalg.h"
+#include "tensor.h"
 #include <iostream>
 
 int main() {
-    tensor<int> x = tensor<int>({3, 4, 5, 6}, {9, 9, 9, 9});
-    std::vector<int> z = x._indices_from_index(200);
-    matrix<int> a(2, 3, {3, 3, 3, 2, 1, 4});
-    std::cout << a._get_element({1, 2});
-}
+    std::vector<std::vector<std::vector<std::vector<int> > > > Matrix =
+{
+    {
+        {
+            {10, 5, -3},
+            {1, 2, 3},
+            {5, 6, 9}
+        },
+        {
+            {10, 5, -3},
+            {1, 2, 3},
+            {5, 6, 9}
+        }, 
+        {
+            {10, 5, -3},
+            {1, 2, 3},
+            {5, 6, 9}
+        }
+    },
+    {
+        {
+            {10, 5, -3},
+            {1, 2, 3},
+        },
+        {
+            {10, 5, -3},
+            {1, 2, 3},
+            {5, 6, 9}
+        }, 
+        {
+            {10, 5, -3}
+        }
+    }
+};
+    std::vector<size_t> deep = {};
+    span::get_shape(Matrix, deep);
+    std::vector<int> out;
+    span::flatten(Matrix, out);
+L}
+
