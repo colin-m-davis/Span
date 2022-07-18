@@ -4,43 +4,7 @@
 #include <iostream>
 
 int main() {
-    std::vector<std::vector<std::vector<std::vector<int> > > > Matrix =
-{
-    {
-        {
-            {10, 5, -3},
-            {1, 2, 3},
-            {5, 6, 9}
-        },
-        {
-            {10, 5, -3},
-            {1, 2, 3},
-            {5, 6, 9}
-        }, 
-        {
-            {10, 5, -3},
-            {1, 2, 3},
-            {5, 6, 9}
-        }
-    },
-    {
-        {
-            {10, 5, -3},
-            {1, 2, 3},
-        },
-        {
-            {10, 5, -3},
-            {1, 2, 3},
-            {5, 6, 9}
-        }, 
-        {
-            {10, 5, -3}
-        }
-    }
-};
-    std::vector<size_t> deep = {};
-    span::get_shape(Matrix, deep);
-    std::vector<int> out;
-    span::flatten(Matrix, out);
-L}
+    span::Tensor<int, 2> M = span::Tensor<int, 2>({2, 2}, {1, 2, 3, 4});
+    M._get_element({0, 1});
+}
 
