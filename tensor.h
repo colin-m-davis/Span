@@ -12,7 +12,7 @@ namespace span {
 template<typename T, int n>
 class Tensor {
 
-public:
+public: // TODO: more thoughtful access specifications to be implemented
     int _size = 1;
     int rank = n;
     std::array<int, n> _shape;
@@ -49,8 +49,8 @@ BEGIN IMPLEMENTATION
 ------------------------*/
 
 template<typename T, int n>
-Tensor<T, n>::Tensor(std::array<int, n> s, std::vector<T> data) {
-    _set_shape(s);
+Tensor<T, n>::Tensor(std::array<int, n> shape, std::vector<T> data) {
+    _set_shape(shape);
     _data = data;
 }
 
