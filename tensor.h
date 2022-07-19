@@ -19,7 +19,7 @@ public: // TODO: more thoughtful access specifications to be implemented
     std::array<int, n> _strides;
     std::vector<T> _data; 
     
-    Tensor(std::array<int, n> s, std::vector<T> data);
+    Tensor(std::array<int, n> s);
 
     void _set_shape(const std::array<int, n>& s);
 
@@ -49,9 +49,8 @@ BEGIN IMPLEMENTATION
 ------------------------*/
 
 template<typename T, int n>
-Tensor<T, n>::Tensor(std::array<int, n> shape, std::vector<T> data) {
+Tensor<T, n>::Tensor(std::array<int, n> shape) {
     _set_shape(shape);
-    _data = data;
 }
 
 template<typename T, int n>
@@ -61,7 +60,7 @@ void Tensor<T, n>::_set_shape(const std::array<int, n>& shape) {
         _size *= _shape[i];
         _strides[i] = (i == n-1) ? (1) : (_shape[i+1] * _strides[i+1]);
     }
-    _data.reserve(_size);
+    _data.resize(_size);
 }
 
 template<typename T, int n>
