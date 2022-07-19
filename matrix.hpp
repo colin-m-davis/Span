@@ -45,6 +45,9 @@ public:
     TODO: definition (prerequisite: select/view)
     */
     static Matrix<T> rref(const Matrix<T>& a);
+
+    std::vector<T> get_row(int row_idx);
+    std::vector<T> get_col(int col_idx);
 };
 
 
@@ -58,17 +61,17 @@ Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
         for (int j=0; j<b.n; j++) {
             // C_i,j
 
-            T sum = T {};
+            T s = T {};
 
             // i-th row of a, j-th column of b
             int a_index = a._index_from_indices({i, 0});
             int b_index = b._index_from_indices({0, j});
             for(int k=0; k<a.n; k++) {
-                sum += a._get_element(a_index) * b._get_element(b_index);
+                s = s + (a._get_element(a_index) * b._get_element(b_index));
                 a_index++; // For all M, M._strides[1] == 1 
                 b_index+=b.n; // For all M, M._strides[0] == M.n
             }
-            ab._data[ab._index_from_indices({i, j})] = sum;
+            ab._data[ab._index_from_indices({i, j})] = s;
         }
     }
     return ab;
@@ -85,6 +88,29 @@ Matrix<T> Matrix<T>::transpose(const Matrix<T>& a) {
     }
     return a_t;
 }
+
+template<typename T>
+std::vector<T> Matrix<T>::get_row(int row_idx) {
+    std::vector<T> row;
+    row.reserve(n);
+    for (int i=0; i<n; i++) {
+        row.push_back(Tensor<T, 2>::_get_element({row_idx, i}));
+    }
+    return row;
+}
+
+template<typename T>
+std::vector<T> Matrix<T>::get_col(int col_idx) {
+    std::vector<T> col;
+    col.reserve(m);
+    for (int i=0; i<m; i++) {
+        col.push_back(Tensor<T, 2>::_get_element({i, col_idx}));
+    }
+    return col;
+}
+
+
+
 
 } // namespace span
 

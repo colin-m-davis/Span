@@ -18,6 +18,7 @@ int main() {
     };
 
     span::Matrix<int> C = span::Matrix<int>::transpose(A);
-    std::cout << (A == B) << std::endl;
+    std::cout << (A == span::Matrix<int>::transpose(A)) << std::endl;
+    std::vector<int> x = B.get_row(2);
 }
 
