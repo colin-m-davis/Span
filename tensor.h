@@ -21,8 +21,6 @@ public: // TODO: more thoughtful access specifications to be implemented
     
     Tensor(std::array<int, n> s);
 
-    void _set_shape(const std::array<int, n>& s);
-
     int _index_from_indices(const std::array<int, n>& indices) const;
     std::array<int, n> _indices_from_index(int index) const;
 
@@ -32,17 +30,18 @@ public: // TODO: more thoughtful access specifications to be implemented
     void _set_element(const std::array<int, n>& indices, T element);
     void _set_element(int index_of_element, T element);
 
-    // Member method: Select/slice/view
+    // Member method: slice/view
     // TODO: Implementation. trickier than i thought? or deceptively easy?
     // Return a new struct i.e. "Tensor view" or return a whole new tensor based on this slice?!
 
     // Add each of this element to that element and return new tensor
-    Tensor<T, n> operator+ (Tensor<T, n> const& that);
+    Tensor<T, n> operator+ (const Tensor<T, n>& that);
 
     // Subtract each of this element from that element and return new tensor
-    Tensor<T, n> operator- (Tensor<T, n> const& that);
+    Tensor<T, n> operator- (const Tensor<T, n>& that);
 
-    bool operator== (Tensor<T, n> const& that);
+    bool operator== (const Tensor<T, n>& that) const;
+    bool operator!= (const Tensor<T, n>& that) const;
 };
 
 /* -----------------------
@@ -51,16 +50,10 @@ BEGIN IMPLEMENTATION
 
 template<typename T, int n>
 Tensor<T, n>::Tensor(std::array<int, n> shape) {
-    // TODO: assert shape makes sense–product of elements equals product of elements of old shape
-    _set_shape(shape);
-}
-
-template<typename T, int n>
-void Tensor<T, n>::_set_shape(const std::array<int, n>& shape) {
     _shape = shape;
     for (int i=n-1; i>=0; i--) {
         _size *= _shape[i];
-        _strides[i] = (i == n-1) ? (1) : (_shape[i+1] * _strides[i+1]);
+        _strides[i] = (i == n-1) ? (1) : (_shape[i+1] * _strides[i+1]); // Last stride is 1
     }
     _data.resize(_size);
 }
@@ -76,13 +69,11 @@ int Tensor<T, n>::_index_from_indices(const std::array<int, n>& indices) const {
 
 template<typename T, int n>
 std::array<int, n> Tensor<T, n>::_indices_from_index(int index) const {
+    assert((index >= 0) && (index <= _size));
     std::vector<int> indices(n, 0);
     for (int i=0; i<n; i++) {
-        int y = _strides[i];
-        while (index >= y) {
-            index -= y;
-            indices[i]++;
-        }
+        indices[i] = index / _strides[i];
+        index %= _strides[i];
     }
     return indices;
 }
@@ -111,7 +102,7 @@ void Tensor<T, n>::_set_element(int index_of_element, T element) {
 
 // Add each of this element to that element and return new tensor
 template<typename T, int n>
-Tensor<T, n> Tensor<T, n>::operator+ (Tensor<T, n> const& that) {
+Tensor<T, n> Tensor<T, n>::operator+ (const Tensor<T, n>& that) {
     Tensor<T, n> result(_shape);
     for (int i=0; i<_size; i++) {
         result._set_element(i, _data[i]+that._data[i]);
@@ -121,7 +112,7 @@ Tensor<T, n> Tensor<T, n>::operator+ (Tensor<T, n> const& that) {
 
 // Subtract each of this element from that element and return new tensor
 template<typename T, int n>
-Tensor<T, n> Tensor<T, n>::operator- (Tensor<T, n> const& that) {
+Tensor<T, n> Tensor<T, n>::operator- (const Tensor<T, n>& that) {
     Tensor<T, n> result(_shape);
     for (int i=0; i<_size; i++) {
         result._set_element(i, _data[i]-that._data[i]);
@@ -130,8 +121,13 @@ Tensor<T, n> Tensor<T, n>::operator- (Tensor<T, n> const& that) {
 }
 
 template<typename T, int n>
-bool Tensor<T, n>::operator== (Tensor<T, n> const& that) {
-    return ((_shape == that._shape) & (_data == that.data));
+bool Tensor<T, n>::operator== (const Tensor<T, n>& that) const {
+    return ((_shape == that._shape) & (_data == that._data));
+}
+
+template<typename T, int n>
+bool Tensor<T, n>::operator!= (const Tensor<T, n>& that) const {
+    return (!(*this)==that);
 }
 
 #endif // TENSOR_H_

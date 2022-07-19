@@ -33,6 +33,13 @@ public:
     in comparison to the efficiency gained by storing large objects linearly in memory.
     */
     static Matrix<T> mult(const Matrix<T>& a, const Matrix<T>& b);
+
+    /*
+    Naive, out-of-place matrix transpose
+    TODO: cache efficient (cache oblivious, even) algorithm for large matrices
+    https://en.wikipedia.org/wiki/Cache-oblivious_algorithm
+    */
+    static Matrix<T> transpose(const Matrix<T>& a);
 };
 
 
@@ -41,18 +48,21 @@ Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
     assert(a.n == b.m);
 
     Matrix<T> c({a.m, b.n});
-    std::vector<T> data;
 
     for (int i=0; i<a.m; i++) {
         for (int j=0; j<b.n; j++) {
             // C_i,j
+
+            // Initialize object to default
             T sum = T {};
+
+            // i-th row of a, j-th column of b
             int a_index = a._index_from_indices({i, 0});
             int b_index = b._index_from_indices({0, j});
             for(int k=0; k<a.n; k++) {
                 sum += a._get_element(a_index) * b._get_element(b_index);
-                a_index++; // a._strides[1] = 1 for any a
-                b_index+=b._strides[0];
+                a_index++; // For all M, M._strides[1] == 1 
+                b_index+=b.n; // For all M, M._strides[0] == M.n
             }
             c._data[c._index_from_indices({i, j})] = sum;
         }
@@ -60,8 +70,22 @@ Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
     return c;
 }
 
+template<typename T>
+Matrix<T> Matrix<T>::transpose(const Matrix<T>& a) {
+    Matrix<T> b({a.n, a.m}); // Transpose of m x n matrix is n x m matrix
+    for (int i=0; i<b.m; i++) {
+        for (int j=0; j<b.n; j++) {
+            T element = a._get_element({j, i});
+            b._set_element({i, j}, element);
+        }
+    }
+    return b;
+}
+
 /*
 
 */
+
+
 
 } // namespace span
