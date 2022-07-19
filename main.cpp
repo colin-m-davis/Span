@@ -15,7 +15,7 @@ int main() {
         3, 8,
         7, 6
     };
-    span::Matrix<int> C = span::mult(A, B);
+    span::Matrix<int> C = span::Matrix<int>::mult(A, B);
     std::cout << C._get_element({1, 0}) << std::endl;
 }
 

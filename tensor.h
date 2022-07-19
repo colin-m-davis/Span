@@ -23,17 +23,18 @@ public: // TODO: more thoughtful access specifications to be implemented
 
     void _set_shape(const std::array<int, n>& s);
 
-    int _index_from_indices(const std::array<int, n>& indices);
+    int _index_from_indices(const std::array<int, n>& indices) const;
+    std::array<int, n> _indices_from_index(int index) const;
 
-    std::array<int, n> _indices_from_index(int index);
-
-    T _get_element(const std::array<int, n>& indices);
-
-    T _get_element(int index_of_element);
+    T _get_element(const std::array<int, n>& indices) const;
+    T _get_element(int index_of_element) const;
 
     void _set_element(const std::array<int, n>& indices, T element);
-
     void _set_element(int index_of_element, T element);
+
+    // Member method: Select/slice/view
+    // TODO: Implementation. trickier than i thought? or deceptively easy?
+    // Return a new struct i.e. "Tensor view" or return a whole new tensor based on this slice?!
 
     // Add each of this element to that element and return new tensor
     Tensor<T, n> operator+ (Tensor<T, n> const& that);
@@ -50,6 +51,7 @@ BEGIN IMPLEMENTATION
 
 template<typename T, int n>
 Tensor<T, n>::Tensor(std::array<int, n> shape) {
+    // TODO: assert shape makes sense–product of elements equals product of elements of old shape
     _set_shape(shape);
 }
 
@@ -64,7 +66,7 @@ void Tensor<T, n>::_set_shape(const std::array<int, n>& shape) {
 }
 
 template<typename T, int n>
-int Tensor<T, n>::_index_from_indices(const std::array<int, n>& indices) {
+int Tensor<T, n>::_index_from_indices(const std::array<int, n>& indices) const {
     int index = 0;
     for (int i=0; i<n; i++) {
         index += indices[i] * _strides[i];
@@ -73,7 +75,7 @@ int Tensor<T, n>::_index_from_indices(const std::array<int, n>& indices) {
 }
 
 template<typename T, int n>
-std::array<int, n> Tensor<T, n>::_indices_from_index(int index) {
+std::array<int, n> Tensor<T, n>::_indices_from_index(int index) const {
     std::vector<int> indices(n, 0);
     for (int i=0; i<n; i++) {
         int y = _strides[i];
@@ -86,13 +88,13 @@ std::array<int, n> Tensor<T, n>::_indices_from_index(int index) {
 }
 
 template<typename T, int n>
-T Tensor<T, n>::_get_element(const std::array<int, n>& indices) {
+T Tensor<T, n>::_get_element(const std::array<int, n>& indices) const {
     int index_of_element = _index_from_indices(indices);
     return _data[index_of_element];
 }
 
 template<typename T, int n>
-T Tensor<T, n>::_get_element(int index_of_element) {
+T Tensor<T, n>::_get_element(int index_of_element) const {
     return _data[index_of_element];
 }
 
