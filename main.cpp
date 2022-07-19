@@ -1,6 +1,6 @@
 /* For testing purposes */
 
-#include "matrix.h"
+#include "matrix.hpp"
 #include <iostream>
 
 int main() {
@@ -17,7 +17,7 @@ int main() {
         -1,
     };
 
-    span::Matrix<int> C = span::Matrix<int>::transpose(B);
+    span::Matrix<int> C = span::Matrix<int>::transpose(A);
     std::cout << (A == B) << std::endl;
 }
 

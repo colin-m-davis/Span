@@ -1,8 +1,7 @@
-#ifndef TENSOR_H_
-#define TENSOR_H_
+#ifndef TENSOR_HPP_
+#define TENSOR_HPP_
 
 // Dependencies
-#include <stdlib.h>
 #include <vector>
 #include <array>
 
@@ -130,6 +129,6 @@ bool Tensor<T, n>::operator!= (const Tensor<T, n>& that) const {
     return (!(*this)==that);
 }
 
-#endif // TENSOR_H_
-
 } // namespace span
+
+#endif // TENSOR_HPP_

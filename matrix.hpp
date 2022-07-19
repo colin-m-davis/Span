@@ -1,5 +1,10 @@
-#include "tensor.h"
+#ifndef MATRIX_HPP_
+#define MATRIX_HPP_
 
+#include <vector>
+#include <array>
+
+#include "tensor.hpp"
 
 namespace span {
 
@@ -21,12 +26,6 @@ public:
     }
 
     /*
-    Row echelon form
-    TODO: definition (prerequisite: select/view)
-    */
-    Matrix<T> get_ref(const Matrix<T>& a);
-
-    /*
     Matrix multiplication (naive implementation)
     https://en.wikipedia.org/wiki/Matrix_multiplication
     Mapping to and from linear data storage and row, column notation is expensive for small matrices but negligible
@@ -40,6 +39,12 @@ public:
     https://en.wikipedia.org/wiki/Cache-oblivious_algorithm
     */
     static Matrix<T> transpose(const Matrix<T>& a);
+
+    /*
+    Row echelon form
+    TODO: definition (prerequisite: select/view)
+    */
+    static Matrix<T> rref(const Matrix<T>& a);
 };
 
 
@@ -47,13 +52,12 @@ template<typename T>
 Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
     assert(a.n == b.m);
 
-    Matrix<T> c({a.m, b.n});
+    Matrix<T> ab({a.m, b.n});
 
     for (int i=0; i<a.m; i++) {
         for (int j=0; j<b.n; j++) {
             // C_i,j
 
-            // Initialize object to default
             T sum = T {};
 
             // i-th row of a, j-th column of b
@@ -64,28 +68,24 @@ Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
                 a_index++; // For all M, M._strides[1] == 1 
                 b_index+=b.n; // For all M, M._strides[0] == M.n
             }
-            c._data[c._index_from_indices({i, j})] = sum;
+            ab._data[ab._index_from_indices({i, j})] = sum;
         }
     }
-    return c;
+    return ab;
 }
 
 template<typename T>
 Matrix<T> Matrix<T>::transpose(const Matrix<T>& a) {
-    Matrix<T> b({a.n, a.m}); // Transpose of m x n matrix is n x m matrix
-    for (int i=0; i<b.m; i++) {
-        for (int j=0; j<b.n; j++) {
+    Matrix<T> a_t({a.n, a.m}); // Transpose of m x n matrix is n x m matrix
+    for (int i=0; i<a_t.m; i++) {
+        for (int j=0; j<a_t.n; j++) {
             T element = a._get_element({j, i});
-            b._set_element({i, j}, element);
+            a_t._set_element({i, j}, element);
         }
     }
-    return b;
+    return a_t;
 }
 
-/*
-
-*/
-
-
-
 } // namespace span
+
+#endif /* MATRIX_HPP_ */
