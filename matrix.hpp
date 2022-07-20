@@ -11,7 +11,7 @@ namespace span {
 /*
 Matrix class
 For the purpose of this library, a matrix is a rank 2 tensor.
-Mathematicians and physicists, lower your pitchforks please!!!
+Mathematicians and physicists, lower your pitchforks please!
 */
 template<typename T>
 class Matrix : public Tensor<T, 2> {
@@ -108,8 +108,6 @@ std::vector<T> Matrix<T>::get_col(int col_idx) {
     }
     return col;
 }
-
-
 
 
 } // namespace span
