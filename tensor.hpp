@@ -33,14 +33,14 @@ public: // TODO: more thoughtful access specifications to be implemented
     // TODO: Implementation. trickier than i thought? or deceptively easy?
     // Return a new struct i.e. "Tensor view" or return a whole new tensor based on this slice?!
 
-    // Add each of this element to that element and return new tensor
-    Tensor<T, n> operator+ (const Tensor<T, n>& that);
+    // Add each of this element to rhs element and return new tensor
+    Tensor<T, n> operator+ (const Tensor<T, n>& rhs);
 
-    // Subtract each of this element from that element and return new tensor
-    Tensor<T, n> operator- (const Tensor<T, n>& that);
+    // Subtract each of this element from rhs element and return new tensor
+    Tensor<T, n> operator- (const Tensor<T, n>& rhs);
 
-    bool operator== (const Tensor<T, n>& that) const;
-    bool operator!= (const Tensor<T, n>& that) const;
+    bool operator== (const Tensor<T, n>& rhs) const;
+    bool operator!= (const Tensor<T, n>& rhs) const;
 };
 
 /* -----------------------
@@ -99,34 +99,34 @@ void Tensor<T, n>::_set_element(int index_of_element, T element) {
     _data[index_of_element] = element;
 }
 
-// Add each of this element to that element and return new tensor
+// Add each of this element to rhs element and return new tensor
 template<typename T, int n>
-Tensor<T, n> Tensor<T, n>::operator+ (const Tensor<T, n>& that) {
+Tensor<T, n> Tensor<T, n>::operator+ (const Tensor<T, n>& rhs) {
     Tensor<T, n> result(_shape);
     for (int i=0; i<_size; i++) {
-        result._set_element(i, _data[i]+that._data[i]);
+        result._set_element(i, _data[i]+rhs._data[i]);
     }
     return result;
 }
 
-// Subtract each of this element from that element and return new tensor
+// Subtract each of this element from rhs element and return new tensor
 template<typename T, int n>
-Tensor<T, n> Tensor<T, n>::operator- (const Tensor<T, n>& that) {
+Tensor<T, n> Tensor<T, n>::operator- (const Tensor<T, n>& rhs) {
     Tensor<T, n> result(_shape);
     for (int i=0; i<_size; i++) {
-        result._set_element(i, _data[i]-that._data[i]);
+        result._set_element(i, _data[i]-rhs._data[i]);
     }
     return result;
 }
 
 template<typename T, int n>
-bool Tensor<T, n>::operator== (const Tensor<T, n>& that) const {
-    return ((_shape == that._shape) & (_data == that._data));
+bool Tensor<T, n>::operator== (const Tensor<T, n>& rhs) const {
+    return ((_shape == rhs._shape) & (_data == rhs._data));
 }
 
 template<typename T, int n>
-bool Tensor<T, n>::operator!= (const Tensor<T, n>& that) const {
-    return (!(*this)==that);
+bool Tensor<T, n>::operator!= (const Tensor<T, n>& rhs) const {
+    return (!(*this)==rhs);
 }
 
 } // namespace span

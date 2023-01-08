@@ -33,6 +33,8 @@ public:
     */
     static Matrix<T> mult(const Matrix<T>& a, const Matrix<T>& b);
 
+    Matrix<T> operator* (const Matrix<T>& rhs);
+
     /*
     Naive, out-of-place matrix transpose
     TODO: cache efficient (cache oblivious, even) algorithm for large matrices
@@ -75,6 +77,11 @@ Matrix<T> Matrix<T>::mult(const Matrix<T>& a, const Matrix<T>& b) {
         }
     }
     return ab;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator* (const Matrix<T>& rhs) {
+    return mult(this, rhs);
 }
 
 template<typename T>
