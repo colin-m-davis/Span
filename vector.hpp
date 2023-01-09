@@ -1,23 +1,17 @@
-#ifndef VECTOR_HPP_
-#define VECTOR_HPP_
+#pragma once
 
 #include <vector>
+#include <algorithm>
 
 namespace span {
 
-/* fr */
+// Stops after reaching the end of one vector
 template<typename T>
-T dot_product(const std::vector<T>& v, const std::vector<T>& u);
-
-/* for now, norm(v) == sqrt(dot_product(v, v)) */
-template<typename T>
-T norm(const std::vector<T>& v);
-
-/* -----------------
-BEGIN IMPLEMENTATION
------------------ */
+T dot_product(const std::vector<T>& v, const std::vector<T>& u) {
+    T result{};
+    for (auto it_v = v.begin(), it_u = u.begin(); it_v != v.end() && it_u != u.end(); ++it_v, ++it_u)
+        result += *it_v * *it_u;
+    return result;
+}
 
 } // namespace span
-
-#endif /* VECTOR_HPP_ */
-

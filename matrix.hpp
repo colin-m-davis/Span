@@ -1,5 +1,4 @@
-#ifndef MATRIX_HPP_
-#define MATRIX_HPP_
+#pragma once
 
 #include <vector>
 #include <array>
@@ -118,5 +117,3 @@ std::vector<T> Matrix<T>::get_col(int col_idx) {
 
 
 } // namespace span
-
-#endif /* MATRIX_HPP_ */

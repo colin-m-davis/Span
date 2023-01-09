@@ -63,6 +63,8 @@
         "vector": "cpp",
         "__bits": "cpp",
         "iostream": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "__functional_03": "cpp",
+        "__functional_base_03": "cpp"
     }
 }

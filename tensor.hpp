@@ -1,7 +1,5 @@
-#ifndef TENSOR_HPP_
-#define TENSOR_HPP_
+#pragma once
 
-// Dependencies
 #include <vector>
 #include <array>
 
@@ -130,5 +128,3 @@ bool Tensor<T, n>::operator!= (const Tensor<T, n>& rhs) const {
 }
 
 } // namespace span
-
-#endif // TENSOR_HPP_
